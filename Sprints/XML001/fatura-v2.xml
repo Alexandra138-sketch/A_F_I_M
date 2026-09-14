@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<fatura id="2026/001">
+  <cabecalho>
+    <data>2026-09-14</data>
+    <cliente>
+      <nome>João Silva</nome>
+      <morada>Rua Central, nº 12, Viseu</morada>
+      <telefone>912345678</telefone>
+    </cliente>
+  </cabecalho>
+  <produtos>
+    <produto>
+      <codigo>P001</codigo>
+      <designacao>Caderno A4</designacao>
+      <quantidade>2</quantidade>
+      <preco>3.50</preco>
+    </produto>
+    <produto>
+      <codigo>P002</codigo>
+      <designacao>Caneta Azul</designacao>
+      <quantidade>5</quantidade>
+      <preco>1.20</preco>
+    </produto>
+  </produtos>
+</fatura>
