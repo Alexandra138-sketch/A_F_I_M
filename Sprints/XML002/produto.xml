@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!-- ProductID - xsd:int, porque o identificador é um número inteiro. 
+     Category - xsd:string, porque contém texto. -->
+<Product ProductID="123" Category="bicycle"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:noNamespaceSchemaLocation="produto.xsd">
+
+    <!-- ProductName - xsd:string, porque contém o nome do produto em texto. -->
+    <ProductName>Bicicleta de 3 Rodas</ProductName>
+
+    <!-- ProductType - xsd:string, porque representa o tipo do produto através de texto. -->
+    <ProductType>Utilitário</ProductType>
+
+    <!-- Price - xsd:decimal, porque representa um valor numérico que pode ter casas decimais. -->
+    <Price>120</Price>
+
+    <!-- Class - xsd:string, porque representa uma classificação através de texto. -->
+    <Class>Sport</Class> 
+
+    <!-- Company - xsd:string, porque representa o nome da empresa através de texto. -->
+    <Company>ABC Int.</Company>
+
+    <Provider>
+        <!-- Name - xsd:string, porque representa o nome do fabricante em texto. -->
+        <Name>João</Name> 
+
+        <!-- City - xsd:string, porque representa o nome da cidade em texto. -->
+        <City>Viseu</City> 
+    </Provider>
+
+</Product>
