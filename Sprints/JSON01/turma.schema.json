@@ -1,0 +1,59 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$defs": {
+    "nomeDocente": {
+      "type": "string",
+      "pattern": "^[A-Z][a-z]+ [A-Z][a-z]+$",
+      "minLength": 5,
+      "maxLength": 40
+    }
+  },
+  "type": "object",
+  "properties": {
+    "disciplina": {
+      "type": "string",
+      "pattern": "^Aplicacoes .+"
+    },
+    "codigo": {
+      "enum": ["12A", "13A", "14A", "34A", "40A"]
+    },
+    "totalAlunos": {
+      "type": "integer",
+      "minimum": 16,
+      "maximum": 24
+    },
+    "docenteTeorica": { "$ref": "#/$defs/nomeDocente" },
+    "docenteTp1": { "$ref": "#/$defs/nomeDocente" },
+    "docenteTp2": { "$ref": "#/$defs/nomeDocente" },
+    "numeroInscritosTp1": { "type": "integer", "minimum": 0 },
+    "numeroInscritosTp2": { "type": "integer", "minimum": 0 },
+    "data": {
+      "enum": ["08-10-2026", "09-10-2026", "18-11-2026"]
+    },
+    "cursos": {
+      "type": "array",
+      "minItems": 2,
+      "maxItems": 2,
+      "uniqueItems": true,
+      "items": { "enum": ["tdm", "ei", "msti", "rsi"] }
+    },
+    "contacto": {
+      "oneOf": [
+        { "type": "integer", "minimum": 200000000, "maximum": 999999999 },
+        { "const": "naoAplicavel" }
+      ]
+    },
+    "planoAno1": {
+      "type": "array",
+      "oneOf": [
+        { "items": { "enum": ["ADM1", "API1", "BD1"] } },
+        { "items": { "enum": ["ID1", "SI1", "SD1"] } }
+      ]
+    }
+  },
+  "required": ["disciplina", "codigo", "data"],
+  "dependentRequired": {
+    "numeroInscritosTp1": ["docenteTp1"],
+    "numeroInscritosTp2": ["docenteTp2"]
+  }
+}
