@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Sugestões dos Alunos</title>
+  <link rel="stylesheet" href="estilos.css">
+</head>
+<body>
+  <main>
+    <h1>Sugestões dos Alunos</h1>
+
+    <!-- Zona de mensagens de erro (lida pelos leitores de ecrã) -->
+    <div id="mensagens" role="alert"></div>
+
+    <!-- Área 1: entrada (visível sem sessão) -->
+    <section id="entrada" aria-labelledby="titulo-entrada">
+      <h2 id="titulo-entrada">Entrar</h2>
+      <form id="formulario">
+        <label for="utilizador">Utilizador</label>
+        <input id="utilizador" name="utilizador" type="text" autocomplete="username" required>
+
+        <label for="palavraPasse">Palavra-passe</label>
+        <input id="palavraPasse" name="palavraPasse" type="password" autocomplete="current-password" required>
+
+        <button type="submit">Entrar</button>
+      </form>
+    </section>
+
+    <!-- Área 2: sessão (visível após autenticação) -->
+    <section id="sessao" aria-labelledby="titulo-sessao" hidden>
+      <h2 id="titulo-sessao">Sessão</h2>
+      <p>Utilizador: <strong id="nome"></strong> (<span id="papel"></span>)</p>
+      <p>O token expira às <span id="expiracao"></span> (faltam <span id="restante"></span>).</p>
+
+      <button type="button" id="botao-sugestoes"></button>
+      <ul id="lista-sugestoes"></ul>
+
+      <button type="button" id="botao-terminar">Terminar sessão</button>
+    </section>
+  </main>
+
+  <script type="module" src="app.js"></script>
+</body>
+</html>
