@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Sugestões dos Alunos</title>
+  <link rel="stylesheet" href="estilos.css">
+</head>
+<body>
+  <main>
+    <h1>Sugestões dos Alunos</h1>
+    
+    <section id="configuracoes" aria-labelledby="titulo-configuracoes">
+      <h2 id="titulo-configuracoes">Configurações</h2>
+    
+      <div>
+        <label for="tema">Tema</label>
+        <select id="tema" name="tema">
+          <option value="claro">Claro</option>
+          <option value="escuro">Escuro</option>
+        </select>
+      </div>
+    
+      <div>
+        <label for="ordenacao">Ordenação das sugestões</label>
+        <select id="ordenacao" name="ordenacao">
+          <option value="recentes">Mais recentes</option>
+          <option value="estado">Por estado</option>
+        </select>
+      </div>
+    </section>
+
+
+    <!-- Zona de mensagens de erro (lida pelos leitores de ecrã) -->
+    <div id="mensagens" role="alert"></div>
+
+    <!-- Área 1: entrada (visível sem sessão) -->
+    <section id="entrada" aria-labelledby="titulo-entrada">
+      <h2 id="titulo-entrada">Entrar</h2>
+      <form id="formulario">
+        <label for="utilizador">Utilizador</label>
+        <input id="utilizador" name="utilizador" type="text" autocomplete="username" required>
+
+        <label for="palavraPasse">Palavra-passe</label>
+        <input id="palavraPasse" name="palavraPasse" type="password" autocomplete="current-password" required>
+
+        <button type="submit">Entrar</button>
+      </form>
+    </section>
+
+    <!-- Área 2: sessão (visível após autenticação) -->
+    <section id="sessao" aria-labelledby="titulo-sessao" hidden>
+      <h2 id="titulo-sessao">Sessão</h2>
+      
+      <form id="formulario-sugestao" hidden>
+        <h3>Nova sugestão</h3>
+      
+        <label for="titulo-sugestao">Título</label>
+        <input
+          id="titulo-sugestao"
+          name="titulo"
+          type="text"
+          minlength="10"
+          maxlength="120"
+          required
+        >
+      
+        <label for="descricao-sugestao">Descrição</label>
+        <textarea
+          id="descricao-sugestao"
+          name="descricao"
+          minlength="20"
+          maxlength="2000"
+          required
+        ></textarea>
+      
+        <label for="categoria-sugestao">Categoria</label>
+        <select id="categoria-sugestao" name="categoria" required>
+          <option value="instalacoes">Instalações</option>
+          <option value="ensino">Ensino</option>
+          <option value="servicos">Serviços</option>
+          <option value="atividades">Atividades</option>
+          <option value="outra">Outra</option>
+        </select>
+      
+        <p id="resultado-sugestao" role="status"></p>
+        <button type="submit">Enviar sugestão</button>
+      </form>
+
+      <p>Utilizador: <strong id="nome"></strong> (<span id="papel"></span>)</p>
+      <p>O token expira às <span id="expiracao"></span> (faltam <span id="restante"></span>).</p>
+
+      <button type="button" id="botao-sugestoes"></button>
+      <ul id="lista-sugestoes"></ul>
+
+      <button type="button" id="botao-terminar">Terminar sessão</button>
+    </section>
+  </main>
+
+  <script type="module" src="app.js"></script>
+</body>
+</html>

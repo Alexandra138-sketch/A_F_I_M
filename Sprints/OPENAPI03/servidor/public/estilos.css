@@ -1,0 +1,243 @@
+/* Funciona a partir de 360 px de largura */
+* { box-sizing: border-box; }
+
+body {
+  margin: 0;
+  font-family: system-ui, sans-serif;
+  line-height: 1.5;
+  color: #1a1a1a;
+  background: #f5f5f5;
+}
+
+main {
+  max-width: 40rem;
+  margin: 0 auto;
+  padding: 1rem;
+}
+
+section {
+  background: #fff;
+  padding: 1rem;
+  border-radius: 0.5rem;
+  margin-bottom: 1rem;
+}
+
+/* Sem isto, display:block das secções anularia o atributo hidden */
+[hidden] { display: none !important; }
+
+label { display: block; margin-top: 0.75rem; font-weight: 600; }
+
+input {
+  width: 100%;
+  padding: 0.5rem;
+  font-size: 1rem;
+  border: 1px solid #555;
+  border-radius: 0.25rem;
+}
+
+/* Estilo geral dos botões */
+button {
+  margin-top: 1rem;
+  margin-right: 0.5rem;
+  padding: 0.65rem 1.2rem;
+  font-size: 1rem;
+  font-weight: 600;
+  border: 1px solid transparent;
+  border-radius: 0.5rem;
+  background-color: #0b57d0;
+  color: #fff;
+  cursor: pointer;
+  transition: background-color 0.2s, transform 0.2s;
+}
+
+/* Efeito ao passar o rato */
+button:hover {
+  background-color: #0842a0;
+  transform: translateY(-1px);
+}
+
+/* Efeito ao clicar */
+button:active {
+  transform: translateY(0);
+}
+
+/* Botões no tema escuro */
+body.tema-escuro button {
+  background-color: #454545;
+  color: #fff;
+  border-color: #666;
+}
+
+/* Efeito ao passar o rato no tema escuro */
+body.tema-escuro button:hover {
+  background-color: #5a5a5a;
+}
+
+/* Contorno visível em todos os elementos com foco */
+:focus-visible {
+  outline: 3px solid #ff9800;
+  outline-offset: 2px;
+}
+
+/* Tema escuro */
+body.tema-escuro {
+  background-color: #000;
+  color: #fff;
+}
+
+body.tema-escuro main,
+body.tema-escuro section {
+  background-color: #000;
+  color: #fff;
+}
+
+body.tema-escuro h1,
+body.tema-escuro h2,
+body.tema-escuro p,
+body.tema-escuro label,
+body.tema-escuro strong,
+body.tema-escuro span {
+  color: #fff;
+}
+
+body.tema-escuro input,
+body.tema-escuro select,
+body.tema-escuro button {
+  background-color: #000;
+  color: #fff;
+  border: 1px solid #666;
+}
+
+body.tema-escuro input::placeholder {
+  color: #ccc;
+}
+
+body.tema-escuro #mensagens {
+  background-color: #000;
+  color: #ffb3b3;
+  border-color: #ff6666;
+}
+
+
+/* Cards cinzentos no tema escuro */
+body.tema-escuro section {
+  background-color: #1f1f1f;
+}
+
+/* Texto dos cards */
+body.tema-escuro section h2,
+body.tema-escuro section p,
+body.tema-escuro section label,
+body.tema-escuro section strong,
+body.tema-escuro section span {
+  color: #fff;
+}
+
+/* Campos dentro dos cards */
+body.tema-escuro section input,
+body.tema-escuro section select {
+  background-color: #202020;
+  color: #fff;
+  border-color: #555;
+}
+
+/* Dropdowns de tema e ordenação */
+select {
+  width: 100%;
+  padding: 0.65rem 1rem;
+  margin-top: 0.35rem;
+  font-size: 1rem;
+  font-family: inherit;
+  color: #1a1a1a;
+  background-color: #fff;
+  border: 1px solid #ccc;
+  border-radius: 0.5rem;
+  cursor: pointer;
+  transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+/* Quando o dropdown está selecionado */
+select:focus {
+  outline: none;
+  border-color: #0b57d0;
+  box-shadow: 0 0 0 3px rgba(11, 87, 208, 0.15);
+}
+
+/* Efeito ao passar o rato */
+select:hover {
+  border-color: #0b57d0;
+}
+
+/* Dropdowns no tema escuro */
+body.tema-escuro select {
+  color: #fff;
+  background-color: #1a1a1a;
+  border-color: #555;
+}
+
+/* Foco no tema escuro */
+body.tema-escuro select:focus {
+  border-color: #aaa;
+  box-shadow: 0 0 0 3px rgba(255, 255, 255, 0.1);
+}
+
+/* Opções do dropdown no tema escuro */
+body.tema-escuro select option {
+  color: #fff;
+  background-color: #2b2b2b;
+}
+
+/* Campo de descrição */
+textarea {
+  width: 100%;
+  min-height: 120px;
+  max-height: 250px;
+  padding: 0.65rem 1rem;
+  margin-top: 0.35rem;
+  font-family: inherit;
+  font-size: 1rem;
+  line-height: 1.5;
+  color: #1a1a1a;
+  background-color: #fff;
+  border: 1px solid #ccc;
+  border-radius: 0.5rem;
+  resize: vertical;
+  overflow-y: auto;
+  box-sizing: border-box;
+}
+
+/* Quando o campo está selecionado */
+textarea:focus {
+  outline: 2px solid #0b57d0;
+  outline-offset: 2px;
+}
+
+/* Campo de descrição no tema escuro */
+body.tema-escuro textarea {
+  color: #fff;
+  background-color: #1a1a1a;
+  border-color: #555;
+}
+
+/* Foco no tema escuro */
+body.tema-escuro textarea:focus {
+  outline-color: #aaa;
+}
+
+/* Erro distinguido por mais do que a cor: borda grossa, ícone e prefixo em texto */
+#mensagens:empty { display: none; }
+#mensagens {
+  margin-bottom: 1rem;
+  padding: 0.75rem 1rem;
+  background: #fdecea;
+  color: #7a0b0b;
+  border: 2px solid #b3261e;
+  border-left-width: 8px;
+  border-radius: 0.25rem;
+  font-weight: 600;
+}
+#mensagens::before { content: "\26A0  Erro: "; }
+
+#lista-sugestoes { padding-left: 1.25rem; }
+#lista-sugestoes li { margin-bottom: 0.5rem; }
+.estado { font-style: italic; }
