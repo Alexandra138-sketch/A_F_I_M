@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Sugestões dos Alunos</title>
+  <link rel="stylesheet" href="estilos.css">
+</head>
+<body>
+  <main>
+    <h1>Sugestões dos Alunos</h1>
+
+    <section id="configuracoes" aria-labelledby="titulo-configuracoes">
+      <h2 id="titulo-configuracoes">Configurações</h2>
+
+      <div>
+        <label for="tema">Tema</label>
+        <select id="tema" name="tema">
+          <option value="claro">Claro</option>
+          <option value="escuro">Escuro</option>
+        </select>
+      </div>
+
+      <div>
+        <label for="ordenacao">Ordenação das sugestões</label>
+        <select id="ordenacao" name="ordenacao">
+          <option value="recentes">Mais recentes</option>
+          <option value="estado">Por estado</option>
+        </select>
+      </div>
+    </section>
+
+    <!-- Indicação da ligação e mensagens gerais (lidas pelos leitores de ecrã) -->
+    <p id="estado-ligacao" aria-live="polite"></p>
+    <div id="mensagem-geral" role="status"></div>
+
+    <!-- Estado: a-verificar -->
+    <section id="area-a-verificar">
+      <p>A verificar sessão…</p>
+    </section>
+
+    <!-- Estado: sem-sessao -->
+    <section id="area-sem-sessao" aria-labelledby="titulo-entrada" hidden>
+      <h2 id="titulo-entrada">Entrar</h2>
+      <form id="form-entrar">
+        <label for="campo-utilizador">Utilizador</label>
+        <input id="campo-utilizador" name="utilizador" type="text" autocomplete="username" required>
+
+        <label for="campo-palavra-passe">Palavra-passe</label>
+        <input id="campo-palavra-passe" name="palavraPasse" type="password" autocomplete="current-password" required>
+
+        <button id="botao-entrar" type="submit">Entrar</button>
+        <p id="mensagem-entrada" role="alert"></p>
+      </form>
+    </section>
+
+    <!-- Estado: com-sessao -->
+    <section id="area-com-sessao" hidden>
+      <h2 id="titulo-sessao" tabindex="-1">Sessão iniciada</h2>
+      <p>Utilizador: <strong id="nome"></strong> (<span id="papel"></span>)</p>
+      <p>Tempo restante: <span id="tempo-restante"></span></p>
+    </section>
+
+    <!-- Estado: sem-ligacao -->
+    <section id="area-sem-ligacao" hidden>
+      <h2>Sem ligação</h2>
+      <p>Não foi possível contactar o servidor.</p>
+    </section>
+
+    <!-- Terminar sessão (desativado em sem-ligacao) -->
+    <div id="barra-sessao" hidden>
+      <button type="button" id="botao-sair">Terminar sessão</button>
+      <span id="explicacao-sair" hidden>Só é possível terminar a sessão com ligação, porque só o servidor consegue apagar o cookie.</span>
+    </div>
+
+    <button type="button" id="botao-atualizar" hidden>Atualizar a aplicação</button>
+
+    <!-- Dados: lista (IndexedDB) e nova sugestão -->
+    <section id="bloco-dados" hidden>
+      <h2>As minhas sugestões</h2>
+      <p id="nota-dados"></p>
+      <ul id="lista-sugestoes"></ul>
+
+      <form id="form-nova">
+        <h3>Nova sugestão</h3>
+
+        <label for="campo-titulo">Título</label>
+        <input id="campo-titulo" name="titulo" type="text" minlength="10" maxlength="120" required>
+
+        <label for="campo-descricao">Descrição</label>
+        <textarea id="campo-descricao" name="descricao" minlength="20" maxlength="2000" required></textarea>
+
+        <label for="campo-categoria">Categoria</label>
+        <select id="campo-categoria" name="categoria" required></select>
+
+        <p id="mensagem-nova" role="alert"></p>
+        <button id="botao-nova" type="submit">Enviar sugestão</button>
+      </form>
+    </section>
+
+    <dialog id="dialogo-sair">
+      <p id="texto-confirmar"></p>
+      <form method="dialog">
+        <button value="cancelar">Cancelar</button>
+        <button value="confirmar">Terminar sessão</button>
+      </form>
+    </dialog>
+  </main>
+
+  <!-- Scripts normais primeiro; o módulo app.js fica sempre por último -->
+  <script src="bd.js"></script>
+  <script src="pendentes.js"></script>
+  <script type="module" src="app.js"></script>
+</body>
+</html>
