@@ -1,0 +1,46 @@
+[
+  {
+    "id": 1,
+    "titulo": "Mais tomadas na biblioteca",
+    "descricao": "Propõe-se a instalação de mais tomadas junto às mesas de estudo da biblioteca.",
+    "categoria": "instalacoes",
+    "numeroAluno": "12345",
+    "estado": "submetida",
+    "dataCriacao": "2026-10-02T09:15:00Z",
+    "dataAtualizacao": "2026-10-02T09:15:00Z",
+    "dataResolucao": null
+  },
+  {
+    "id": 2,
+    "titulo": "Horário alargado da cantina",
+    "descricao": "Sugere-se que a cantina funcione até às 15h00 para servir os alunos com aulas de tarde.",
+    "categoria": "servicos",
+    "numeroAluno": "12345",
+    "estado": "aceite",
+    "dataCriacao": "2026-10-03T11:00:00Z",
+    "dataAtualizacao": "2026-10-09T14:30:00Z",
+    "dataResolucao": null
+  },
+  {
+    "id": 3,
+    "titulo": "Mais aulas práticas de redes",
+    "descricao": "Propõe-se o reforço das aulas práticas da unidade curricular de redes de computadores.",
+    "categoria": "ensino",
+    "numeroAluno": "67890",
+    "estado": "em_analise",
+    "dataCriacao": "2026-10-04T16:20:00Z",
+    "dataAtualizacao": "2026-10-08T10:00:00Z",
+    "dataResolucao": null
+  },
+  {
+    "id": 4,
+    "titulo": "Torneio de jogos eletrónicos",
+    "descricao": "Organizar um torneio anual de jogos eletrónicos aberto a todos os cursos da escola.",
+    "categoria": "atividades",
+    "numeroAluno": "67890",
+    "estado": "resolvida",
+    "dataCriacao": "2026-09-20T12:00:00Z",
+    "dataAtualizacao": "2026-10-10T09:00:00Z",
+    "dataResolucao": "2026-10-10T09:00:00Z"
+  }
+]
