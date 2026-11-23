@@ -1,0 +1,206 @@
+openapi: 3.0.3
+info:
+  title: Reporta API
+  version: 1.0.0
+  description: >
+    Comunicação de ocorrências na via pública. O servidor deteta duplicados
+    (categoria + não resolvida + distância <= raio) e reforça em vez de criar.
+servers:
+  - url: http://localhost:3000
+components:
+  securitySchemes:
+    Cidadao: { type: apiKey, in: header, name: X-Cidadao, description: UUID do dispositivo }
+    Admin: { type: apiKey, in: header, name: X-Admin-Token }
+  parameters:
+    IdempotencyKey:
+      name: Idempotency-Key
+      in: header
+      required: false
+      schema: { type: string, format: uuid }
+      description: Chave por cidadão, guardada 24 h. Mesmo corpo => resposta guardada (Idempotent-Replayed true); outro corpo => 409.
+    Id: { name: id, in: path, required: true, schema: { type: integer } }
+  headers:
+    Location: { schema: { type: string }, description: URL da ocorrência }
+    Replayed: { schema: { type: string, enum: ['true'] } }
+  schemas:
+    Categoria:
+      type: object
+      required: [id, nome, raio]
+      properties:
+        id: { type: string, enum: [buraco, semaforo, iluminacao, sinalizacao, outro] }
+        nome: { type: string }
+        raio: { type: integer, description: Metros }
+    Localizacao:
+      type: object
+      required: [lat, lng]
+      properties:
+        lat: { type: number, minimum: -90, maximum: 90 }
+        lng: { type: number, minimum: -180, maximum: 180 }
+        precisao: { type: number, nullable: true, minimum: 0, description: Metros }
+    Ocorrencia:
+      type: object
+      required: [id, categoria, descricao, localizacao, temFotografia, estado, comunicacoes, criadaEm, atualizadaEm, versao]
+      properties:
+        id: { type: integer }
+        categoria: { type: string }
+        descricao: { type: string, minLength: 10, maxLength: 500 }
+        localizacao: { $ref: '#/components/schemas/Localizacao' }
+        temFotografia: { type: boolean }
+        estado: { type: string, enum: [aberta, em-resolucao, resolvida] }
+        comunicacoes: { type: integer, minimum: 1 }
+        criadaEm: { type: string, format: date-time }
+        atualizadaEm: { type: string, format: date-time }
+        versao: { type: integer, description: Contador do servidor; é o cursor de sincronização }
+    Erro:
+      type: object
+      required: [erro]
+      properties: { erro: { type: string } }
+    Resultado:
+      type: object
+      required: [resultado, ocorrencia]
+      properties:
+        resultado: { type: string, enum: [criada, reforcada, ja-comunicada] }
+        ocorrencia: { $ref: '#/components/schemas/Ocorrencia' }
+    NovaOcorrencia:
+      type: object
+      required: [categoria, descricao, localizacao]
+      properties:
+        categoria: { type: string }
+        descricao: { type: string, minLength: 10, maxLength: 500 }
+        localizacao: { $ref: '#/components/schemas/Localizacao' }
+        fotografia: { type: string, description: 'data URL image/jpeg, máx. 300 KB' }
+        recusadas: { type: array, items: { type: integer }, description: Candidatas que o cidadão rejeitou }
+  responses:
+    BadRequest: { description: Pedido inválido, content: { application/json: { schema: { $ref: '#/components/schemas/Erro' } } } }
+    Unauthorized: { description: X-Cidadao em falta ou inválido, content: { application/json: { schema: { $ref: '#/components/schemas/Erro' } } } }
+    NotFound: { description: Não encontrada, content: { application/json: { schema: { $ref: '#/components/schemas/Erro' } } } }
+    Conflict: { description: Idempotency-Key usada com outro corpo, content: { application/json: { schema: { $ref: '#/components/schemas/Erro' } } } }
+paths:
+  /v1/categorias:
+    get:
+      summary: Categorias e raios
+      responses:
+        '200': { description: OK, content: { application/json: { schema: { type: array, items: { $ref: '#/components/schemas/Categoria' } } } } }
+  /v1/ocorrencias/semelhantes:
+    get:
+      summary: Candidatas a duplicado (até 5, por distância crescente)
+      parameters:
+        - { name: categoria, in: query, required: true, schema: { type: string } }
+        - { name: lat, in: query, required: true, schema: { type: number } }
+        - { name: lng, in: query, required: true, schema: { type: number } }
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                required: [candidatas]
+                properties:
+                  candidatas:
+                    type: array
+                    maxItems: 5
+                    items:
+                      type: object
+                      required: [ocorrencia, distancia]
+                      properties:
+                        ocorrencia: { $ref: '#/components/schemas/Ocorrencia' }
+                        distancia: { type: integer, description: Metros }
+        '400': { $ref: '#/components/responses/BadRequest' }
+  /v1/ocorrencias:
+    get:
+      summary: Ocorrências não resolvidas numa área (mapa)
+      parameters:
+        - { name: bbox, in: query, required: true, schema: { type: string }, description: 'minLng,minLat,maxLng,maxLat' }
+      responses:
+        '200': { description: OK, content: { application/json: { schema: { type: array, items: { $ref: '#/components/schemas/Ocorrencia' } } } } }
+        '400': { $ref: '#/components/responses/BadRequest' }
+    post:
+      summary: Comunicar (criar ou reforçar)
+      security: [{ Cidadao: [] }]
+      parameters: [{ $ref: '#/components/parameters/IdempotencyKey' }]
+      requestBody:
+        required: true
+        content: { application/json: { schema: { $ref: '#/components/schemas/NovaOcorrencia' } } }
+      responses:
+        '201':
+          description: Criada
+          headers: { Location: { $ref: '#/components/headers/Location' } }
+          content: { application/json: { schema: { $ref: '#/components/schemas/Resultado' } } }
+        '200':
+          description: Reforçada (comunicacoes+1) ou já comunicada (contador inalterado); pode ser repetição (Idempotent-Replayed)
+          headers:
+            Location: { $ref: '#/components/headers/Location' }
+            Idempotent-Replayed: { $ref: '#/components/headers/Replayed' }
+          content: { application/json: { schema: { $ref: '#/components/schemas/Resultado' } } }
+        '400': { $ref: '#/components/responses/BadRequest' }
+        '401': { $ref: '#/components/responses/Unauthorized' }
+        '409': { $ref: '#/components/responses/Conflict' }
+  /v1/ocorrencias/{id}/reforcos:
+    post:
+      summary: Reforçar uma ocorrência existente
+      security: [{ Cidadao: [] }]
+      parameters: [{ $ref: '#/components/parameters/Id' }, { $ref: '#/components/parameters/IdempotencyKey' }]
+      requestBody:
+        content:
+          application/json:
+            schema: { type: object, properties: { comentario: { type: string, maxLength: 500 } } }
+      responses:
+        '201':
+          description: Reforçada
+          headers: { Location: { $ref: '#/components/headers/Location' } }
+          content: { application/json: { schema: { $ref: '#/components/schemas/Resultado' } } }
+        '200':
+          description: Já comunicada (ou repetição com Idempotent-Replayed)
+          headers:
+            Location: { $ref: '#/components/headers/Location' }
+            Idempotent-Replayed: { $ref: '#/components/headers/Replayed' }
+          content: { application/json: { schema: { $ref: '#/components/schemas/Resultado' } } }
+        '400': { $ref: '#/components/responses/BadRequest' }
+        '401': { $ref: '#/components/responses/Unauthorized' }
+        '404': { $ref: '#/components/responses/NotFound' }
+        '409': { $ref: '#/components/responses/Conflict' }
+        '410': { description: Ocorrência resolvida, content: { application/json: { schema: { $ref: '#/components/schemas/Erro' } } } }
+  /v1/ocorrencias/{id}/fotografia:
+    get:
+      parameters: [{ $ref: '#/components/parameters/Id' }]
+      responses:
+        '200': { description: JPEG, content: { image/jpeg: { schema: { type: string, format: binary } } } }
+        '404': { $ref: '#/components/responses/NotFound' }
+  /v1/ocorrencias/alteracoes:
+    get:
+      summary: O que mudou desde o cursor (só ocorrências que o cidadão comunicou ou reforçou)
+      security: [{ Cidadao: [] }]
+      parameters:
+        - { name: desde, in: query, required: true, schema: { type: integer, minimum: 0 } }
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                required: [alteracoes, cursor]
+                properties:
+                  alteracoes: { type: array, items: { $ref: '#/components/schemas/Ocorrencia' } }
+                  cursor: { type: integer }
+        '400': { $ref: '#/components/responses/BadRequest' }
+        '401': { $ref: '#/components/responses/Unauthorized' }
+  /v1/admin/ocorrencias/{id}:
+    patch:
+      summary: Mudar o estado (administração)
+      security: [{ Admin: [] }]
+      parameters: [{ $ref: '#/components/parameters/Id' }]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [estado]
+              properties: { estado: { type: string, enum: [aberta, em-resolucao, resolvida] } }
+      responses:
+        '200': { description: OK, content: { application/json: { schema: { $ref: '#/components/schemas/Ocorrencia' } } } }
+        '400': { $ref: '#/components/responses/BadRequest' }
+        '403': { description: Token inválido, content: { application/json: { schema: { $ref: '#/components/schemas/Erro' } } } }
+        '404': { $ref: '#/components/responses/NotFound' }
