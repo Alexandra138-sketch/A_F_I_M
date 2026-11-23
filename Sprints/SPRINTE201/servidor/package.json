@@ -1,0 +1,7 @@
+{
+  "name": "reporta-servidor",
+  "version": "0.1.0",
+  "private": true,
+  "main": "servidor.js",
+  "dependencies": { "express": "^4.19.2" }
+}

@@ -1,0 +1,4 @@
+body { margin: 0; font: 16px/1.4 system-ui, sans-serif; }
+header { background: #b3261e; color: #fff; padding: .75rem 1rem; }
+header h1 { margin: 0; font-size: 1.25rem; }
+main { max-width: 40rem; margin: 0 auto; padding: 1rem; }
